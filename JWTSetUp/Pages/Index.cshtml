@@ -1,0 +1,47 @@
+﻿@page
+@model JWTSetUp.Pages.IndexModel
+@{
+}
+<html>
+    <body>
+        <button onclick="Login()">Login</button>
+        <button onclick="GetData()">Get Data</button>
+
+        <script>
+            let Token = "";
+            function Login(){
+                let data = {
+                    Email: "admin@mail.com",
+                    Password: "123456"
+                };
+                fetch("/api/User/Login", {
+                    method:"post",
+                    headers: {
+                        "Content-Type":"application/json"
+                    },
+                    body: JSON.stringify(data)
+                } )
+                .then(e => e.json())
+                .then(result => {
+                    console.log(result);
+                    alert(JSON.stringify(result));
+                    if(result.success){
+                        Token = result.token;
+                    }
+                });
+            }
+
+            function GetData(){
+                fetch("/WeatherForecast/",{
+                    headers: {
+                        "Authorization": `Bearer ${Token}`
+                    }
+                })
+                .then(e => e.json())
+                .then(result => {
+                    alert(JSON.stringify(result));
+                });
+            }
+        </script>
+    </body>    
+</html>
